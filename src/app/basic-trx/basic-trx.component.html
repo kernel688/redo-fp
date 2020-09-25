@@ -33,16 +33,18 @@
                 <th>Edit</th>
             </tr>
             <tr class="transactions-table-data" *ngFor="let transaction of allTransactions">
-                <td>{{transaction.number}}</td>
-                <td>{{transaction.date}}</td>
-                <td>{{transaction.type}}</td>
-                <td>{{transaction.amount}}</td>
-                <td>{{transaction.description}}</td>
-                <td><a href="/basic-trx">Delete</a></td>
-                <td>Edit</td>
+                <ng-container *ngIf="transaction.hidden !== true">
+                    <td>{{transaction.number}}</td>
+                    <td>{{transaction.date}}</td>
+                    <td>{{transaction.type}}</td>
+                    <td>{{transaction.amount}}</td>
+                    <td>{{transaction.description}}</td>
+                    <td><a href="/basic-trx" (click)="hideTrx(transaction)">Delete</a></td>
+                    <td>Edit</td>
+                </ng-container>
             </tr>
         </table>
-
+            
         
     </div>
 </section>
