@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "redo-fp"
+    }
+  },
+  "defaultProject": "redo-fp",
+  "cli": {
+    "analytics": "0b4f47f3-7e95-456a-b3c4-0a384e8a27e1"
+  }
 }
