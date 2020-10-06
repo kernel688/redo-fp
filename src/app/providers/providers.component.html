@@ -1,0 +1,58 @@
+<div class="container mt-3">
+
+    <div class="mb-5">
+        <h3 class="section-title">Enter Providers</h3>
+        <form>
+            <div class="row">
+                <div class="form-group col-2">
+                    <label for="form-id">ID Number</label>
+                    <input autofocus required class="form-control" id="form-idnumber" type="number" min="100000000" max="999999999" [(ngModel)]="formData.idnumber" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div class="form-group col-5">
+                    <label for="form-fullname">Full Name</label>
+                    <input required class="form-control" id="form-fullname" type="text" [(ngModel)]="formData.fullname" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div class="form-group col-3">
+                    <label for="form-country">Country</label>
+                    <input required class="form-control" id="form-country" type="text" [(ngModel)]="formData.country" [ngModelOptions]="{standalone: true}">
+                </div>
+            </div>
+            <div class="form-group">
+                <input class="btn btn-primary" type="button" value="Add Provider" (click)="addProvider()">
+            </div>
+        </form>
+    </div>
+
+    <div class="mb-5">
+        <h3 class="section-title">Registered Providers</h3>
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">N.</th>
+                        <th scope="col">Date Added</th>
+                        <th scope="col">ID Number</th>
+                        <th scope="col">Full Name</th>
+                        <th scope="col">Country</th>
+                        <th scope="col">Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let provider of allProviders">
+                        <ng-container *ngIf="provider.hidden !== true">
+                            <th scope="row">{{provider.number}}</th>
+                            <td>{{provider.date}}</td>
+                            <td>{{provider.idnumber}}</td>
+                            <td>{{provider.fullname}}</td>
+                            <td>{{provider.country}}</td>
+                            <td>Edit</td>
+                        </ng-container>
+                    </tr>
+                </tbody>
+            </table>
+                
+            
+
+        </div>
+
+    <p><a href="/">Back to home</a></p>
+</div>
