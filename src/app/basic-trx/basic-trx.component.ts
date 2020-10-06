@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {trxDate, trxDateTime, trxTimeStamp} from '../sharedFunctions'
+import {dateOnly, dateTime, dateTimeStamp} from '../sharedFunctions'
 
 @Component({
   selector: 'app-basic-trx',
@@ -11,7 +11,7 @@ export class BasicTrxComponent implements OnInit {
   formData: any = {};
   allTransactions: Array<object> = JSON.parse(localStorage.getItem("allTransactions")) || [];
   currentBalance: number = Number(localStorage.getItem("currentBalance")) || 0;
-  currentTrxNumber: number = Number(localStorage.getItem("currentTrxNumber")) || 0;
+  currentTrxNumber: number = Number(localStorage.getItem("currentTrxNumber")) || 1;
   
   constructor() { }
   
@@ -22,7 +22,7 @@ export class BasicTrxComponent implements OnInit {
     
     let validTrx = this.formData.amount > 0 && this.formData.trxType && this.formData.description
 
-    trxTimeStamp()
+    dateTimeStamp()
     
     if (validTrx) {
       let tempAmount = 0
@@ -35,21 +35,23 @@ export class BasicTrxComponent implements OnInit {
       
       let trxDetails = {
         number: this.currentTrxNumber,
-        date: trxDate,
+        date: dateOnly,
         type: this.formData.trxType,
         amount: Number(this.formData.amount),
         description: this.formData.description,
         hidden: false,
-        trxID: trxDateTime
+        trxID: dateTime
       }
       this.allTransactions.push(trxDetails)
       localStorage.setItem("allTransactions",JSON.stringify(this.allTransactions))
       
+      this.formData.amount = null
+      this.formData.trxType = null
+      this.formData.description = null
       
       
     } else {
-      alert('fill all the fields pleas')
-      console.log(this.allTransactions);
+      alert('Fill all the fields please!')
       
     }
     

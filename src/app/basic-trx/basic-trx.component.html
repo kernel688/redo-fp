@@ -1,50 +1,75 @@
-<section>
-    <h2 class="section-title">Enter Transactions</h2>
-    <form class="form">
-        <label class="form-label">Income: <input class="form-input" type="radio" [(ngModel)]="formData.trxType" value="Income" [ngModelOptions]="{standalone: true}"></label>
-        <label class="form-label">Expense: <input class="form-input" type="radio" [(ngModel)]="formData.trxType"value="Expense" [ngModelOptions]="{standalone: true}"></label>
-        <label class="form-label">Amount: <input autofocus class="form-input" type="number" min="0" [(ngModel)]="formData.amount" [ngModelOptions]="{standalone: true}"></label>
-        <label class="form-label">Description: <input class="form-input" type="text" [(ngModel)]="formData.description" [ngModelOptions]="{standalone: true}"></label>
-        <input class="form-submit" type="button" value="Save Transaction" (click)="addTrx()">
-    </form>
-</section>
-
-
-<section>
-    <h2 class="section-title">Current Balance</h2>
-    <div class="balance">
-        <p class="balance-currency">COP</p>
-        <p class="balance-amount" id="currentBalance">{{currentBalance}}</p>
+<div class="container mt-3">
+    <div class="mb-5">
+        <h3 class="section-title">Current Balance</h3>
+        <div class="balance">
+            <p class="balance-currency">COP ${{currentBalance}}</p>
+        </div>
     </div>
-</section>
 
 
-<section>
-    <h2 class="section-title">Registered Transactions</h2>
-    <div class="transactions">
-        <table class="transactions-table">
-            <tr class="transactions-table-header">
-                <th>N.</th>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Amount</th>
-                <th>Notes</th>
-                <th>Delete</th>
-                <th>Edit</th>
-            </tr>
-            <tr class="transactions-table-data" *ngFor="let transaction of allTransactions">
-                <ng-container *ngIf="transaction.hidden !== true">
-                    <td>{{transaction.number}}</td>
-                    <td>{{transaction.date}}</td>
-                    <td>{{transaction.type}}</td>
-                    <td>{{transaction.amount}}</td>
-                    <td>{{transaction.description}}</td>
-                    <td><a href="/basic-trx" (click)="hideTrx(transaction)">Delete</a></td>
-                    <td>Edit</td>
-                </ng-container>
-            </tr>
-        </table>
+    <div class="mb-5">
+        <h3 class="section-title">Enter Transactions</h3>
+        <form>
+            <div class="row">
+                <div class="form-group col-2">
+                    <label>Transacion Type</label><br>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" id="form-radio-income" type="radio" [(ngModel)]="formData.trxType" value="Income" [ngModelOptions]="{standalone: true}">
+                        <label class="form-check-label" for="form-radio-income">Income</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" id="form-radio-expense" type="radio" [(ngModel)]="formData.trxType"value="Expense" [ngModelOptions]="{standalone: true}">
+                        <label class="form-check-label" for="form-radio-income">Expense</label>
+                    </div>
+                </div>
+                <div class="form-group col-2 mr-5">
+                    <label for="form-amount">Amount</label>
+                    <input autofocus required class="form-control" id="form-amount" type="number" min="0" [(ngModel)]="formData.amount" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div class="form-group col">
+                    <label for="form-description">Description</label>
+                    <input required class="form-control" id="form-description" type="text" [(ngModel)]="formData.description" [ngModelOptions]="{standalone: true}">
+                </div>
+            </div>
+            <div class="form-group">
+                <input class="btn btn-primary" type="button" value="Add Transaction" (click)="addTrx()">
+            </div>
+        </form>
+    </div>
+
+
+    <div class="mb-5">
+        <h3 class="section-title">Registered Transactions</h3>
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">N.</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Notes</th>
+                        <th scope="col">Delete</th>
+                        <th scope="col">Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let transaction of allTransactions">
+                        <ng-container *ngIf="transaction.hidden !== true">
+                            <th scope="row">{{transaction.number}}</th>
+                            <td>{{transaction.date}}</td>
+                            <td>{{transaction.type}}</td>
+                            <td>{{transaction.amount}}</td>
+                            <td>{{transaction.description}}</td>
+                            <td><a href="/basic-trx" (click)="hideTrx(transaction)">Delete</a></td>
+                            <td>Edit</td>
+                        </ng-container>
+                    </tr>
+                </tbody>
+            </table>
+                
             
-        
-    </div>
-</section>
+
+        </div>
+
+        <p><a href="/">Back to home</a></p>
+</div>
