@@ -8,13 +8,15 @@ import { HomeComponent } from './home/home.component';
 import { NotFoundComponent } from './notfound/notfound.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ProvidersComponent } from './providers/providers.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     BasicTrxComponent,
     HomeComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    ProvidersComponent
   ],
   imports: [
     BrowserModule,
