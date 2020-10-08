@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {dateOnly, dateTime, dateTimeStamp} from '../sharedFunctions'
+import { dateOnly, dateTime, dateTimeStamp } from '../sharedFunctions'
+import { HttprequestsService } from '../httprequests.service'
 
 @Component({
   selector: 'app-providers',
@@ -7,26 +8,38 @@ import {dateOnly, dateTime, dateTimeStamp} from '../sharedFunctions'
   styleUrls: ['./providers.component.css']
 })
 export class ProvidersComponent implements OnInit {
+  
+  
+  constructor(public service: HttprequestsService) {}
+  
+  
+  ngOnInit(): void {
+    this.getStarterInfo()
+  }
+  
 
   formData: any = {}
-  allProviders: Array<object> = JSON.parse(localStorage.getItem("allProviders")) || [];
-  currentProviderNumber: number = Number(localStorage.getItem("currentProviderNumber")) || 1;
+  allProviders: Array<object>;
+  
 
-  constructor() { }
-
-  ngOnInit(): void {
+  async getStarterInfo() {
+    var result = await this.service.getProviders()
+    if (result.result === true) {
+      this.allProviders = result.data || []
+    } else {
+      alert(result.message)
+    }
   }
-
-  addProvider() {
+  
+  async addProvider() {
 
     let validProvider = this.formData.idnumber >= 100000000 && this.formData.idnumber <= 999999999 && this.formData.fullname && this.formData.country
-
+    
     dateTimeStamp()
-
+    
     if (validProvider) {
-      
       let providerDetails = {
-        number: this.currentProviderNumber,
+        number: Number(this.allProviders.length) + 1 || 1,
         date: dateOnly,
         idnumber: Number(this.formData.idnumber),
         fullname: this.formData.fullname,
@@ -34,16 +47,26 @@ export class ProvidersComponent implements OnInit {
         hidden: false,
         trxID: dateTime
       }
-      this.allProviders.push(providerDetails)
-      localStorage.setItem("allProviders",JSON.stringify(this.allProviders))
+      
+      var result = await this.service.postProvider(providerDetails)
+      
+      if (result.result === true) {
+        this.formData.idnumber = null
+        this.formData.fullname = null
+        this.formData.country = null
+        this.getStarterInfo()
+      } else {
+        alert(result.message)
+      }
+
+      
+      
+        
+      
+      
 
 
 
-
-
-      this.formData.idnumber = null
-      this.formData.fullname = null
-      this.formData.country = null
     } else {
       alert('Fill all the fields please!')
     }

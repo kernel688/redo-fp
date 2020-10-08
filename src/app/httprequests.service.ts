@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 
 export class HttprequestsService {
 
-  urlServicioBase: string = "http://localhost:4200/";
+  urlServicio: string = "http://localhost:9000/";
 
 
   constructor(
@@ -15,9 +15,35 @@ export class HttprequestsService {
   ) { }
 
 
+  async getProviders() {
+    var result = await this.get('providers')
+    return result
+  }
+    
+  async postProvider(provider) {
+    var result = await this.post('providers',provider)
+    return result
+  }
+
+  async getTransactions() {
+    var result = await this.get('transactions')
+    return result
+  }
+  
+  async postTransaction(transaction) {
+    var result = await this.post('transactions',transaction)
+    return result
+  }
+
+
+
+
+
+
+
   private get(url): Promise<any> {
     return new Promise((result, reject) => {
-      this.http.get(this.urlServicioBase + url).subscribe((data) => {
+      this.http.get(this.urlServicio + url).subscribe((data) => {
         result(data);
       }, (error) => reject(error));
     });
@@ -25,7 +51,7 @@ export class HttprequestsService {
 
   private post(url, data): Promise<any> {
     return new Promise((result, reject) => {
-      this.http.post(this.urlServicioBase + url, data).subscribe((data) => {
+      this.http.post(this.urlServicio + url, data).subscribe((data) => {
         result(data);
       }, (error) => reject(error));
     });
