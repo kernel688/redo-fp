@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors')
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const { ObjectId } = require('mongodb');
 const MongoClient = require('mongodb').MongoClient
 const app = express();
 
@@ -44,7 +45,6 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
     });
 
     app.post("/providers", function (req, res) {
-        console.log(req.body);
         db.collection('providers').insertOne(req.body).then(result => {
             res.json({
                 result: true,
@@ -89,6 +89,23 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
                 result: false,
                 message: "Couldn't add the transactions to the database.",
                 data: error
+            });
+        });
+    });
+
+
+    app.get('/deleteTransaction', function (req, res) {
+        db.collection('transactions').deleteOne({_id: ObjectId(req.query._id)}).then(result => {
+            res.json({
+                result: true,
+                message: '',
+                data: true
+            });
+        }).catch(error => {
+            res.json({
+                result: false,
+                message: 'Transaction not found in database.',
+                data: false
             });
         });
     });
