@@ -34,8 +34,11 @@ export class HttprequestsService {
     var result = await this.post('transactions',transaction)
     return result
   }
-
-
+  
+  async deleteTransaction(transactionID: string) {
+    var result = await this.get('deleteTransaction?_id=' + transactionID)
+    return result
+  }
 
 
 
@@ -56,5 +59,6 @@ export class HttprequestsService {
       }, (error) => reject(error));
     });
   }
+
   
 }
