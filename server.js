@@ -77,7 +77,6 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
     });
 
     app.post("/transactions", function (req, res) {
-        console.log(req.body);
         db.collection('transactions').insertOne(req.body).then(result => {
             res.json({
                 result: true,
