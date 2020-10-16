@@ -110,7 +110,6 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
     });
 
     app.post("/updateTransaction", function (req, res) {
-        console.log(req.body._id);
         db.collection('transactions').findOneAndUpdate({_id: ObjectId(req.body._id)},{$set: {
             type: req.body.type,
             amount: req.body.amount,
