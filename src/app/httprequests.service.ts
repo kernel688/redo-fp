@@ -40,6 +40,11 @@ export class HttprequestsService {
     return result
   }
 
+  async postTrxUpdate(transaction) {
+    var result = await this.post('updateTransaction',transaction)
+    return result
+  }
+
 
 
 

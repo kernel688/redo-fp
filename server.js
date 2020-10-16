@@ -109,6 +109,28 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
         });
     });
 
+    app.post("/updateTransaction", function (req, res) {
+        console.log(req.body._id);
+        db.collection('transactions').findOneAndUpdate({_id: ObjectId(req.body._id)},{$set: {
+            type: req.body.type,
+            amount: req.body.amount,
+            description: req.body.description,
+            lastUpdated: req.body.lastUpdated
+        }}).then(result => {
+            res.json({
+                result: true,
+                message: "",
+                data: result
+            });
+        }).catch(error => {
+            res.json({
+                result: false,
+                message: "Couldn't update the transaction in the database.",
+                data: error
+            });
+        });
+    });
+
 
 })
 

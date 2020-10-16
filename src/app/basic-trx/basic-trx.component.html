@@ -33,7 +33,8 @@
 
             </div>
             <div class="form-group">
-                <input class="btn btn-primary" type="button" value="Add Transaction" (click)="addTrx()">
+                <input class="btn btn-primary mr-2" type="button" value="Add Transaction" (click)="addTrx()">
+                <input class="btn btn-primary mr-2" type="button" value="Update Transaction" (click)="updateTrx()">
             </div>
         </form>
     </div>
@@ -44,7 +45,6 @@
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
-                        <th scope="col">N.</th>
                         <th scope="col">Date</th>
                         <th scope="col">Type</th>
                         <th scope="col">Amount</th>
@@ -56,13 +56,12 @@
                 <tbody>
                     <tr *ngFor="let transaction of allTransactions">
                         <ng-container *ngIf="transaction.hidden !== true">
-                            <th scope="row">{{transaction.number}}</th>
                             <td>{{transaction.date}}</td>
                             <td>{{transaction.type}}</td>
                             <td>{{transaction.amount}}</td>
                             <td>{{transaction.description}}</td>
-                            <td><a href="/basic-trx" (click)="deleteTrx(transaction)">Delete</a></td>
-                            <td>Edit</td>
+                            <td><a (click)="deleteTrx(transaction)">Delete</a></td>
+                            <td><a (click)="editTrx(transaction)">Edit</a></td>
                         </ng-container>
                     </tr>
                 </tbody>

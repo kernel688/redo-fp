@@ -2,15 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { dateOnly, dateTime, dateTimeStamp } from '../sharedFunctions'
 import { HttprequestsService } from '../httprequests.service'
 
+
 @Component({
   selector: 'app-basic-trx',
   templateUrl: './basic-trx.component.html',
   styleUrls: ['./basic-trx.component.css']
 })
+
+
 export class BasicTrxComponent implements OnInit {
 
   constructor(public service: HttprequestsService) { 
-    
   }
   
   
@@ -18,11 +20,11 @@ export class BasicTrxComponent implements OnInit {
     this.getStarterInfo()
   }
   
-  
-  
+    
   formData: any = {}
   allTransactions: any []
   currentBalance: number = 0
+  updateTrxID: string = ''
   
   
   async getStarterInfo() {
@@ -54,13 +56,12 @@ export class BasicTrxComponent implements OnInit {
     
     if (validTrx) {
       let trxDetails = {
-        number: Number(this.allTransactions.length) + 1 || 1,
         date: dateOnly,
         type: this.formData.trxType,
         amount: Number(this.formData.amount),
         description: this.formData.description,
-        hidden: false,
-        trxID: dateTime
+        entered: dateTime,
+        lastUpdated: dateTime
       }
 
       var result = await this.service.postTransaction(trxDetails)
@@ -80,37 +81,50 @@ export class BasicTrxComponent implements OnInit {
 
   async deleteTrx(transaction) {
     var result = await this.service.deleteTransaction(transaction._id);
-    
     if (result.result === true) {
       this.getStarterInfo()
-      
     } else {
       alert(result.message)
     }
   }
+    
 
+  editTrx(transaction) {
+    this.formData.amount = transaction.amount
+    this.formData.trxType = transaction.type
+    this.formData.description = transaction.description
+    this.updateTrxID = transaction._id
 
+    // Cambio de botones
 
-
-
-
-
-
-
-
-
-
-
-  hideTrx(transaction) {
-    let trxToHide = this.allTransactions[Number(this.allTransactions.indexOf(transaction))]
-    trxToHide["hidden"] = true
-
-    let tempAmount = 0
-    trxToHide["type"] === 'Income' ? tempAmount = Number(trxToHide["amount"]) * -1 : tempAmount = Number(trxToHide["amount"])
-    this.currentBalance = tempAmount + this.currentBalance
-
-    localStorage.setItem("currentBalance", JSON.stringify(this.currentBalance))
-    localStorage.setItem("allTransactions", JSON.stringify(this.allTransactions))
   }
 
+
+  async updateTrx() {
+    let validTrx = this.formData.amount > 0 && this.formData.trxType && this.formData.description
+    dateTimeStamp()
+    
+    if (validTrx) {
+      let trxDetails = {
+        _id: this.updateTrxID,
+        type: this.formData.trxType,
+        amount: Number(this.formData.amount),
+        description: this.formData.description,
+        lastUpdated: dateTime
+      }
+
+      var result = await this.service.postTrxUpdate(trxDetails)
+      if (result.result === true) {
+        this.formData.amount = null
+        this.formData.trxType = null
+        this.formData.description = null
+        this.updateTrxID = ''
+        this.getStarterInfo()
+      } else {
+        alert(result.message)
+      }
+    } else {
+      alert('Fill all the fields please!')
+    }
+  }
 }
