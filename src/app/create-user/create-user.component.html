@@ -1,0 +1,28 @@
+<div class="container mt-3">
+    <div class="mb-5">
+        <h3 class="section-title">Create Users</h3>
+        <form>
+            <div class="row">
+                <div class="form-group col">
+                    <label for="form-username">Username</label>
+                    <input required class="form-control" id="form-username" type="text" [(ngModel)]="formData.username" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div class="form-group col">
+                    <label for="form-fullname">Full Name</label>
+                    <input required class="form-control" id="form-fullname" type="text" [(ngModel)]="formData.fullname" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div class="form-group col">
+                    <label for="form-password">Password</label>
+                    <input required class="form-control" id="form-password" type="password" [(ngModel)]="formData.password" [ngModelOptions]="{standalone: true}">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <input class="btn btn-primary mr-2" type="button" value="Create User" (click)="createUser()">
+            </div>
+        </form>
+    </div>
+
+
+    <p><a href="/home">Back to home</a></p>
+</div>

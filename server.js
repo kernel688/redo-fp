@@ -3,13 +3,13 @@ const cors = require('cors')
 const bodyParser = require('body-parser');
 const { ObjectId } = require('mongodb');
 const MongoClient = require('mongodb').MongoClient
-const app = express();
 
+const app = express();
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 
-const connectionString = "mongodb+srv://kernel688:P455forTesting@cluster0.clvog.mongodb.net/redo-fp?retryWrites=true&w=majority";
+const connectionString = "mongodb+srv://kernel688:P455forTesting@cluster0.clvog.mongodb.net/redo-fp?retryWrites=true&w=majority"
 
 MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client) => {
     
@@ -130,6 +130,38 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
         });
     });
 
+
+    app.post("/users", function (req, res) {
+        db.collection('users').insertOne(req.body).then(result => {
+            res.json({
+                result: true,
+                message: "",
+                data: result
+            });
+        }).catch(error => {
+            res.json({
+                result: false,
+                message: "Couldn't add the user to the database.",
+                data: error
+            });
+        });
+    });
+
+    app.post("/login", function (req, res) {
+        db.collection('users').find({"username": req.body.username, "password": req.body.password}).toArray().then(result => {
+            res.json({
+                result: true,
+                message: "",
+                data: result.length
+            });
+        }).catch(error => {
+            res.json({
+                result: false,
+                message: "Wrong username or password",
+                data: error
+            });
+        });
+    });
 
 })
 

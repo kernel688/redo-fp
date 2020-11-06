@@ -45,6 +45,16 @@ export class HttprequestsService {
     return result
   }
 
+  async postUser(user) {
+    var result = await this.post('users',user)
+    return result
+  }
+
+  async login(loginData) {
+    var result = await this.post('login',loginData)
+    return result
+  }
+
 
 
 

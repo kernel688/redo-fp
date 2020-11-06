@@ -10,6 +10,8 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ProvidersComponent } from './providers/providers.component';
 import { HttpClientModule } from '@angular/common/http';
+import { CreateUserComponent } from './create-user/create-user.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,9 @@ import { HttpClientModule } from '@angular/common/http';
     BasicTrxComponent,
     HomeComponent,
     NotFoundComponent,
-    ProvidersComponent
+    ProvidersComponent,
+    CreateUserComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
