@@ -15,7 +15,7 @@ const routes: Routes = [
   },
   {
     path: 'basic-trx',
-    component: BasicTrxComponent
+    component: BasicTrxComponent,
   },
   {
   path: 'providers',

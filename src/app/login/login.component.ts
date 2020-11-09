@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { dateOnly, dateTime, dateTimeStamp } from '../sharedFunctions'
 import { HttprequestsService } from '../httprequests.service'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -9,35 +9,39 @@ import { HttprequestsService } from '../httprequests.service'
 })
 export class LoginComponent implements OnInit {
 
-  constructor(public service: HttprequestsService) { }
-
+  constructor(
+    public service: HttprequestsService,
+    private router: Router) { }
+    
   ngOnInit(): void {
   }
 
   formData: any = {}
 
-
   async login() {
+
     let validLogin = this.formData.username && this.formData.password
-    dateTimeStamp()
-    
+
     if (validLogin) {
-      let loginData = {
+      let loginDetails = {
         username: this.formData.username,
-        password: this.formData.password,
-        entered: dateTime
+        password: this.formData.password
       }
 
-      var result = await this.service.login(loginData)
-      if (result.data === 1) {
-        window.location.replace('/home')
-        
+      var result = await this.service.postLogin(loginDetails)
+      if (result.result === true) {
+        this.formData.username = null
+        this.formData.password = null
+        localStorage.setItem("token", result.data);
+        this.router.navigate(["home"])
+
       } else {
         alert(result.message)
       }
     } else {
-      alert('Fill all the fields please!')
+      alert('Enter the Username and the Password')
     }
+
   }
 
 }
