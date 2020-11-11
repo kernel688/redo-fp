@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { dateOnly, dateTime, dateTimeStamp } from '../sharedFunctions'
+import { dateOnly, dateTime, dateTimeStamp, clearToken } from '../sharedFunctions'
 import { HttprequestsService } from '../httprequests.service'
 
 @Component({

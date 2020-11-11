@@ -1,4 +1,4 @@
-export {dateOnly, dateTime, dateTimeStamp}
+export {dateOnly, dateTime, dateTimeStamp, clearToken}
 
 let dateOnly: string;
 let dateTime: string;
@@ -12,4 +12,9 @@ function dateTimeStamp() {
   let second = String(trxFullDate.getSeconds()).padStart(2,'0')
   dateOnly = day + '/' + month + '/' + year
   dateTime = year + month + day + hour + minute + second
+}
+
+function clearToken() {
+  localStorage.removeItem("token")
+  location.reload()
 }

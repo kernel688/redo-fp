@@ -17,10 +17,10 @@ export class LoginComponent implements OnInit {
   }
 
   formData: any = {}
-
+  
   async login() {
-
     let validLogin = this.formData.username && this.formData.password
+    
 
     if (validLogin) {
       let loginDetails = {
@@ -28,7 +28,9 @@ export class LoginComponent implements OnInit {
         password: this.formData.password
       }
 
+
       var result = await this.service.postLogin(loginDetails)
+      
       if (result.result === true) {
         this.formData.username = null
         this.formData.password = null
@@ -41,7 +43,6 @@ export class LoginComponent implements OnInit {
     } else {
       alert('Enter the Username and the Password')
     }
-
   }
 
 }

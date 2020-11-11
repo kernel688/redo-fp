@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 
+
+
 export class HttprequestsService {
 
+  constructor(private http: HttpClient) { }
+
   urlServicio: string = "http://localhost:9000/";
-
-
-  constructor(
-    private http: HttpClient
-  ) { }
+  tokenForHeaders = new HttpHeaders().set('access-token', localStorage.getItem("token") || '')
+  httpOptions = {'headers': this.tokenForHeaders}
+  
 
 
   async getProviders() {
@@ -50,7 +52,7 @@ export class HttprequestsService {
     return result
   }
 
-  async postLogin(loginData) {
+  async postLogin(loginData) {    
     var result = await this.post('login',loginData)
     return result
   }
@@ -61,7 +63,7 @@ export class HttprequestsService {
 
   private get(url): Promise<any> {
     return new Promise((result, reject) => {
-      this.http.get(this.urlServicio + url).subscribe((data) => {
+      this.http.get(this.urlServicio + url,this.httpOptions).subscribe((data) => {
         result(data);
       }, (error) => reject(error));
     });
@@ -69,7 +71,7 @@ export class HttprequestsService {
 
   private post(url, data): Promise<any> {
     return new Promise((result, reject) => {
-      this.http.post(this.urlServicio + url, data).subscribe((data) => {
+      this.http.post(this.urlServicio + url, data, this.httpOptions).subscribe((data) => {
         result(data);
       }, (error) => reject(error));
     });

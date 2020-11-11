@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { dateOnly, dateTime, dateTimeStamp } from '../sharedFunctions'
+import { dateOnly, dateTime, dateTimeStamp, clearToken } from '../sharedFunctions'
 import { HttprequestsService } from '../httprequests.service'
 
 
@@ -8,7 +8,6 @@ import { HttprequestsService } from '../httprequests.service'
   templateUrl: './basic-trx.component.html',
   styleUrls: ['./basic-trx.component.css']
 })
-
 
 export class BasicTrxComponent implements OnInit {
 
@@ -46,6 +45,7 @@ export class BasicTrxComponent implements OnInit {
       
     } else {
       alert(result.message)
+
     }
   }
   
@@ -97,6 +97,10 @@ export class BasicTrxComponent implements OnInit {
 
     // Cambio de botones
 
+  }
+
+  async logout() {
+    await clearToken()
   }
 
 

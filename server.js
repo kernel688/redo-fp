@@ -1,25 +1,27 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
+const cors = require('cors');
 const app = express();
 const port = 9000
-const cors = require('cors')
-const jwt = require('jsonwebtoken');
 const tokenNeededPath = express.Router();
+const tokenExpirationTime = 1440
 const config = {
     key: "c*rryME2safety",
     db: "redo-fp",
     user: "kernel688",
     password: "P455forTesting"}
-
-const { ObjectId } = require('mongodb');
-const MongoClient = require('mongodb').MongoClient
-
-
-app.set('key',config.key)
+const connectionString = `mongodb+srv://${config.user}:${config.password}@cluster0.clvog.mongodb.net/${config.db}?retryWrites=true&w=majority`
 app.listen(port, function () {console.log(`Listening on port ${port}`)})
+app.set('key',config.key)
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(cors())
+    
+    const { ObjectId } = require('mongodb');
+    const MongoClient = require('mongodb').MongoClient
+    
+    
 
 
 tokenNeededPath.use((req, res, next) => {
@@ -27,7 +29,11 @@ tokenNeededPath.use((req, res, next) => {
     if (token) {
         jwt.verify(token, app.get('key'), (err, decoded) => {
             if (err) {
-                return res.json({mesage:'Invalid Token'});
+                return res.json({
+                    result: false,
+                    message: 'Invalid Token',
+                    data: null
+                });
             } else {
                 req.decoded = decoded;
                 next();
@@ -41,17 +47,18 @@ tokenNeededPath.use((req, res, next) => {
 });
 
 
-const connectionString = `mongodb+srv://${config.user}:${config.password}@cluster0.clvog.mongodb.net/${config.db}?retryWrites=true&w=majority`
+
 
 MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client) => {
     
-
+    
     if (err) {
         console.error(err)
     } else {
         console.log('Connected to Database')
     }
     
+
     const db = client.db(config.db)
     
     app.get('/providers', tokenNeededPath, function (req, res) {
@@ -69,7 +76,7 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
             });
         });
     });
-
+    
     app.post("/providers", tokenNeededPath, function (req, res) {
         db.collection('providers').insertOne(req.body).then(result => {
             res.json({
@@ -85,7 +92,7 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
             });
         });
     });
-
+    
     app.get('/transactions', tokenNeededPath, function (req, res) {
         db.collection('transactions').find({}).toArray().then(data => {
             res.json({
@@ -175,13 +182,13 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
     app.post("/login", function (req, res) {
         db.collection('users').find({"username": req.body.username, "password": req.body.password}).toArray().then(result => {
             
-            const payload = {check: true}
-
+            payload = {check: true}
+            
             if (result.length > 0) {
                 res.json({
                     result: true,
                     message: "",
-                    data: jwt.sign(payload, app.get('key'), {expiresIn: 1})
+                    data: jwt.sign(payload, app.get('key'), {expiresIn: tokenExpirationTime})
                 })
             } else {
                 res.json({

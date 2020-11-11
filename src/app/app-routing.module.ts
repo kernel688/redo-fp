@@ -6,6 +6,8 @@ import { NotFoundComponent } from './notfound/notfound.component'
 import { ProvidersComponent } from './providers/providers.component'
 import { CreateUserComponent } from './create-user/create-user.component';
 import { LoginComponent } from './login/login.component';
+import { PathActivationService } from './path-activation.service'
+import { from } from 'rxjs';
 
 const routes: Routes = [
   {
@@ -16,18 +18,22 @@ const routes: Routes = [
   {
     path: 'basic-trx',
     component: BasicTrxComponent,
+    canActivate: [PathActivationService]
   },
   {
   path: 'providers',
-  component: ProvidersComponent
+  component: ProvidersComponent,
+  canActivate: [PathActivationService]
   },
   {
   path: 'createusers',
-  component: CreateUserComponent
+  component: CreateUserComponent,
+  canActivate: [PathActivationService]
   },
   {
   path: 'home',
-  component: HomeComponent
+  component: HomeComponent,
+  canActivate: [PathActivationService]
   },
   {
     path: '**',
