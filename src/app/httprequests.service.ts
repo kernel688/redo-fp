@@ -5,16 +5,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   providedIn: 'root'
 })
 
-
-
 export class HttprequestsService {
 
   constructor(private http: HttpClient) { }
 
-  urlServicio: string = "http://localhost:9000/";
+  urlServicio: string = "https://localhost:1433/";
   tokenForHeaders = new HttpHeaders().set('access-token', localStorage.getItem("token") || '')
-  httpOptions = {'headers': this.tokenForHeaders}
-  
+  httpOptions = {'headers': this.tokenForHeaders};
 
 
   async getProviders() {
@@ -52,7 +49,7 @@ export class HttprequestsService {
     return result
   }
 
-  async postLogin(loginData) {    
+  async postLogin(loginData) {        
     var result = await this.post('login',loginData)
     return result
   }

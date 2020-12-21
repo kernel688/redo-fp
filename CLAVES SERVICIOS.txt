@@ -1,2 +1,3 @@
-MSSQL SA Pass:
-Champs76
+MSSQL
+User: SA
+Pass: Champs76

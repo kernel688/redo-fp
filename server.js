@@ -1,25 +1,33 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const app = express();
-const port = 9000
-const tokenNeededPath = express.Router();
-const tokenExpirationTime = 1440
+
+const sql = require('mssql');
 const config = {
+    user: "sa",
+    password: "Champs76",
+    server: "localhost",
+    database: "redo_fp",
+    options: {
+        "encrypt": true,
+        "enableArithAbort": true},
     key: "c*rryME2safety",
-    db: "redo-fp",
-    user: "kernel688",
-    password: "P455forTesting"}
-const connectionString = `mongodb+srv://${config.user}:${config.password}@cluster0.clvog.mongodb.net/${config.db}?retryWrites=true&w=majority`
-app.listen(port, function () {console.log(`Listening on port ${port}`)})
+    port: 1433
+};
+
+const jwt = require('jsonwebtoken');
+const tokenExpirationTime = 1440
+const tokenNeededPath = express.Router();
+
+
+app.listen(config.port, function () {console.log(`Listening on port ${config.port}`)})
 app.set('key',config.key)
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(cors())
-    
-    const { ObjectId } = require('mongodb');
-    const MongoClient = require('mongodb').MongoClient
+
+
     
     
 
@@ -47,19 +55,16 @@ tokenNeededPath.use((req, res, next) => {
 });
 
 
-
-
-MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client) => {
+sql.connect(config, (err) => {
     
     
     if (err) {
-        console.error(err)
+        console.log(err)
     } else {
         console.log('Connected to Database')
     }
     
-
-    const db = client.db(config.db)
+    let request = new sql.Request()
     
     app.get('/providers', tokenNeededPath, function (req, res) {
         db.collection('providers').find({}).toArray().then(data => {
@@ -163,7 +168,26 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
         });
     });
 
+
     app.post("/users", tokenNeededPath, function (req, res) {
+        request.query('INSERT INTO dbo.users VALUES () ')
+        db.collection('users').insertOne(req.body).then(result => {
+            res.json({
+                result: true,
+                message: "",
+                data: result
+            });
+        }).catch(error => {
+            res.json({
+                result: false,
+                message: "Couldn't add the user to the database.",
+                data: error
+            });
+        });
+    });
+
+
+    app.post("/usersa", tokenNeededPath, function (req, res) {
         db.collection('users').insertOne(req.body).then(result => {
             res.json({
                 result: true,
@@ -180,8 +204,15 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true }, (err, client
     });
 
     app.post("/login", function (req, res) {
-        db.collection('users').find({"username": req.body.username, "password": req.body.password}).toArray().then(result => {
+        console.log(req.body);
+        request.query(
+            `SELECT *
+            FROM dbo.users
+            WHERE username = ${req.body.username}
+                AND password = ${req.body.password}`)
+        .then(result => {
             
+            console.log(result);
             payload = {check: true}
             
             if (result.length > 0) {

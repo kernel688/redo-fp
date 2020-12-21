@@ -28,9 +28,9 @@ export class LoginComponent implements OnInit {
         password: this.formData.password
       }
 
-
-      var result = await this.service.postLogin(loginDetails)
       
+      var result = await this.service.postLogin(loginDetails)
+            
       if (result.result === true) {
         this.formData.username = null
         this.formData.password = null
