@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
       if (result.result === true) {
         this.formData.username = null
         this.formData.password = null
-        localStorage.setItem("token", result.data);
+        localStorage.setItem("token", result.token);
         this.router.navigate(["home"])
 
       } else {

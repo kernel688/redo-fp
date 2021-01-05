@@ -9,8 +9,8 @@ export class HttprequestsService {
 
   constructor(private http: HttpClient) { }
 
-  urlServicio: string = "https://localhost:1433/";
-  tokenForHeaders = new HttpHeaders().set('access-token', localStorage.getItem("token") || '')
+  urlServicio: string = "http://localhost:5000/";
+  tokenForHeaders = new HttpHeaders().set('accessToken', localStorage.getItem("token") || '')
   httpOptions = {'headers': this.tokenForHeaders};
 
 
