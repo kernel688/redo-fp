@@ -39,13 +39,13 @@ export class ProvidersComponent implements OnInit {
     
     if (validProvider) {
       let providerDetails = {
-        number: Number(this.allProviders.length) + 1 || 1,
         date: dateOnly,
         idnumber: Number(this.formData.idnumber),
         fullname: this.formData.fullname,
         country: this.formData.country,
-        hidden: false,
-        trxID: dateTime
+        hidden: 0,
+        entered: dateTime,
+        lastupdated: dateTime
       }
       
       var result = await this.service.postProvider(providerDetails)

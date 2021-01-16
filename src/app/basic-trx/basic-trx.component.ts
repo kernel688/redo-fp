@@ -114,7 +114,7 @@ export class BasicTrxComponent implements OnInit {
         type: this.formData.trxType,
         amount: Number(this.formData.amount),
         description: this.formData.description,
-        lastUpdated: dateTime
+        lastUpdated: Number(dateTime)
       }
 
       var result = await this.service.postTrxUpdate(trxDetails)

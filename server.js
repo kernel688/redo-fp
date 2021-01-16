@@ -11,14 +11,15 @@ const config = {
     server: "localhost",
     database: "redo_fp",
     options: {
-        "encrypt": true,
-        "enableArithAbort": true},
+        encrypt: true,
+        enableArithAbort: true,
+    },
     key: "c*rryME2safety",
     port: 1432
 };
 
 const jwt = require('jsonwebtoken');
-const tokenExpirationTime = 1440
+const tokenExpirationTime = 14400
 const tokenNeededPath = express.Router();
 
 
@@ -51,107 +52,151 @@ tokenNeededPath.use((req, res, next) => {
     }
 });
 
-app.get('/providers', tokenNeededPath, function (req, res) {
-    db.collection('providers').find({}).toArray().then(data => {
+app.get('/providers', tokenNeededPath, async function (req, res) {
+    
+    let result = await db.query(config, `SELECT * FROM dbo.providers ORDER BY country, idnumber`)
+    payload = { check: true }
+
+    if (result.recordset.length > 0) {
         res.json({
             result: true,
-            message: '',
-            data: data
-        });
-    }).catch(error => {
+            message: "",
+            data: result.recordset,
+            token: jwt.sign(payload, app.get('key'), { expiresIn: tokenExpirationTime })
+        })
+    } else {
         res.json({
             result: false,
             message: 'Providers data not found in database.',
-            data: data
-        });
-    });
+            data: null
+        })
+    }
+
+
+
 });
 
-app.post("/providers", tokenNeededPath, function (req, res) {
-    db.collection('providers').insertOne(req.body).then(result => {
+app.post("/providers", tokenNeededPath, async function (req, res) {
+    console.log(req.body.date);
+    let result = await db.query(config,
+        `INSERT INTO dbo.providers VALUES (
+            CONVERT(date,'${req.body.date}',103),
+            ${req.body.idnumber},
+            '${req.body.fullname}',
+            '${req.body.country}',
+            ${req.body.hidden},
+            ${req.body.entered},
+            ${req.body.lastupdated})`
+    )
+
+    if (result.rowsAffected[0] === 1) {
         res.json({
             result: true,
             message: "",
             data: result
         });
-    }).catch(error => {
+    } else {
         res.json({
             result: false,
             message: "Couldn't add the provider to the database.",
             data: error
         });
-    });
+    }
 });
 
-app.get('/transactions', tokenNeededPath, function (req, res) {
-    db.collection('transactions').find({}).toArray().then(data => {
+app.get('/transactions', tokenNeededPath, async function (req, res) {
+    let result = await db.query(config, `SELECT * FROM dbo.transactions ORDER BY _id DESC`)
+    payload = { check: true }
+
+    if (result.recordset.length > 0) {
         res.json({
             result: true,
-            message: '',
-            data: data
-        });
-    }).catch(error => {
+            message: "",
+            data: result.recordset,
+            token: jwt.sign(payload, app.get('key'), { expiresIn: tokenExpirationTime })
+        })
+    } else {
         res.json({
             result: false,
             message: 'Transactions data not found in database.',
-            data: data
-        });
-    });
+            data: null
+        })
+    }
+
 });
 
-app.post("/transactions", tokenNeededPath, function (req, res) {
-    db.collection('transactions').insertOne(req.body).then(result => {
+app.post("/transactions", tokenNeededPath, async function (req, res) {
+    console.log(req.body.date);
+    let result = await db.query(config,
+        `INSERT INTO dbo.transactions ([date],[type],[amount],[description],[entered],[lastupdated]) VALUES (
+            CONVERT(date,'${req.body.date}',103),
+            '${req.body.type}',
+            ${req.body.amount},
+            '${req.body.description}',
+            ${req.body.entered},
+            ${req.body.lastUpdated})`
+    )
+
+    if (result.rowsAffected[0] === 1) {
         res.json({
             result: true,
             message: "",
             data: result
         });
-    }).catch(error => {
+    } else {
         res.json({
             result: false,
             message: "Couldn't add the transactions to the database.",
             data: error
         });
-    });
+    }
+
 });
 
-app.get('/deleteTransaction', tokenNeededPath, function (req, res) {
-    db.collection('transactions').deleteOne({ _id: ObjectId(req.query._id) }).then(result => {
-        res.json({
-            result: true,
-            message: '',
-            data: true
-        });
-    }).catch(error => {
-        res.json({
-            result: false,
-            message: 'Transaction not found in database.',
-            data: false
-        });
-    });
-});
+app.get('/deleteTransaction', tokenNeededPath, async function (req, res) {
+    let result = await db.query(config,
+        `DELETE FROM dbo.transactions WHERE [_id] = ${req.query._id}`
+    )
 
-app.post("/updateTransaction", tokenNeededPath, function (req, res) {
-    db.collection('transactions').findOneAndUpdate({ _id: ObjectId(req.body._id) }, {
-        $set: {
-            type: req.body.type,
-            amount: req.body.amount,
-            description: req.body.description,
-            lastUpdated: req.body.lastUpdated
-        }
-    }).then(result => {
+    if (result.rowsAffected[0] === 1) {
         res.json({
             result: true,
             message: "",
             data: result
         });
-    }).catch(error => {
+    } else {
         res.json({
             result: false,
-            message: "Couldn't update the transaction in the database.",
+            message: "Transacion not deleted.",
             data: error
         });
-    });
+    }
+
+
+});
+
+app.post("/updateTransaction", tokenNeededPath, async function (req, res) {
+
+    let result = await db.query(config,
+        `UPDATE dbo.transactions
+        SET [amount] = ${req.body.amount}, [description] = '${req.body.description}', [type] = '${req.body.type}', [lastUpdated] = ${req.body.lastUpdated}
+        WHERE [_id] = ${req.body._id};`
+    )
+
+    if (result.rowsAffected[0] === 1) {
+        res.json({
+            result: true,
+            message: "",
+            data: result
+        });
+    } else {
+        res.json({
+            result: false,
+            message: "Transaction couldn't be updated",
+            data: error
+        });
+    }
+
 });
 
 app.post("/users", tokenNeededPath, async function (req, res) {

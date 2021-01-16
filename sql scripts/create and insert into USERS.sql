@@ -3,17 +3,27 @@ CREATE TABLE users(
 	[username] VARCHAR(20),
 	[fullname] VARCHAR(200),
 	[password] VARCHAR(20),
-	[entered] VARCHAR(14),
-	[lastupdated] VARCHAR(14)
+	[entered] BIGINT,
+	[lastupdated] BIGINT
 );
 
+CREATE TABLE [REDO_FP].[dbo].transactions(
+  [_id] INT IDENTITY(1,1) PRIMARY KEY,
+	[date] DATE,
+  [type] VARCHAR(20),
+  [amount] DECIMAL(12,2),
+	[description] VARCHAR(200),
+	[entered] BIGINT,
+	[lastupdated] BIGINT
+);
 
-INSERT INTO users (
-	[date],
-	[username],
-	[fullname],
-	[password],
-	[entered],
-	[lastupdated]
-)
-SELECT '2020-10-20','kernel688','Juan Camilo Martinez Cano','k688','20201020224743','20201020224743'
+CREATE TABLE [REDO_FP].[dbo].providers(
+	[date] DATE,
+  [idnumber] BIGINT,
+  [fullname] VARCHAR(200),
+  [country] VARCHAR(50),
+	[hidden] BIT,
+  [entered] BIGINT,
+	[lastupdated] BIGINT,
+  PRIMARY KEY (idnumber,country)
+);

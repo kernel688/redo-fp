@@ -41,7 +41,6 @@
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
-                        <th scope="col">N.</th>
                         <th scope="col">Date Added</th>
                         <th scope="col">ID Number</th>
                         <th scope="col">Full Name</th>
@@ -51,9 +50,8 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let provider of allProviders">
-                        <ng-container *ngIf="provider.hidden !== true">
-                            <th scope="row">{{provider.number}}</th>
-                            <td>{{provider.date}}</td>
+                        <ng-container *ngIf="provider.hidden !== 1">
+                            <td>{{provider.date.split('T')[0]}}</td>
                             <td>{{provider.idnumber}}</td>
                             <td>{{provider.fullname}}</td>
                             <td>{{provider.country}}</td>
